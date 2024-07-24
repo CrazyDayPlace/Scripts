@@ -226,13 +226,35 @@ local Signals , Configs, Games, Notify, Time =
             function()
                 while true do
                     if GUI.Unloaded then break end
-                    if OPTIONS["Enabled Strength"].Value then
-                        if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
-                            firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
-                        else
-                            game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetPower"):FireServer(tonumber(Status("Power")))
+                    pcall(function()
+                        if OPTIONS["Enabled Strength"].Value then
+                            if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
+                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
+                            else
+                                game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetPower"):FireServer(tonumber(Status("Power")))
+                            end
                         end
-                    end
+                    end)
+                    task.wait(0.5)
+                end
+            end
+        )
+    )
+
+    coroutine.resume(
+        coroutine.create(
+            function()
+                while true do
+                    if GUI.Unloaded then break end
+                    pcall(function()
+                        if OPTIONS["Enabled Psychics"].Value then
+                            if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
+                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
+                            else
+                                game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetPsychics"):FireServer(tonumber(Status("Psychics")))
+                            end
+                        end
+                    end)
                     task.wait(0.5)
                 end
             end
@@ -252,24 +274,6 @@ local Signals , Configs, Games, Notify, Time =
                         end
                     end
                     task.wait(1)
-                end
-            end
-        )
-    )
-
-    coroutine.resume(
-        coroutine.create(
-            function()
-                while true do
-                    if GUI.Unloaded then break end
-                    if OPTIONS["Enabled Psychics"].Value then
-                        if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
-                            firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
-                        else
-                            game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetPsychics"):FireServer(tonumber(Status("Psychics")))
-                        end
-                    end
-                    task.wait(0.5)
                 end
             end
         )

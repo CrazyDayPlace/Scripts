@@ -235,7 +235,7 @@ local Signals , Configs, Games, Notify, Time =
                             end
                         end
                     end)
-                    task.wait(0.5)
+                    task.wait(0.35)
                 end
             end
         )
@@ -255,7 +255,7 @@ local Signals , Configs, Games, Notify, Time =
                             end
                         end
                     end)
-                    task.wait(0.5)
+                    task.wait(0.35)
                 end
             end
         )
@@ -266,14 +266,14 @@ local Signals , Configs, Games, Notify, Time =
             function()
                 while true do
                     if GUI.Unloaded then break end
-                    if OPTIONS["Enabled Health"].Value then
+                    if OPTIONS["Enabled Health"].Value and not (OPTIONS["Enabled Psychics"].Value or OPTIONS["Enabled Strength"].Value) then
                         if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
                             firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
                         else
                             game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer()
                         end
                     end
-                    task.wait(1)
+                    task.wait(0.5)
                 end
             end
         )
@@ -289,13 +289,13 @@ local Signals , Configs, Games, Notify, Time =
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in pairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Health") and v:FindFirstChild("TopHealth") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-1,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2,0)
                                     end
                                 end
                             else
                                 for i,v in pairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-1,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2,0)
                                     end
                                 end
                             end

@@ -246,7 +246,7 @@ local Configs, Games, Time =
             Configs.WaitForCharacter = true
             if Signals["Deaded"] then Signals["Deaded"]:Disconnect() Signals["Deaded"] = nil end
             Signals["Adding"] = game:GetService"Players".LocalPlayer.CharacterAdded:Connect(function()
-                task.delay(1.55, function()
+                task.delay(1.25, function()
                     Configs.WaitForCharacter = false
                     if Signals["Adding"] then Signals["Adding"]:Disconnect() Signals["Adding"] = nil end
                 end)

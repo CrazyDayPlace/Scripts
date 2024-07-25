@@ -1,14 +1,12 @@
 repeat wait() until game:IsLoaded()
-local Signals , Configs, Games, Notify, Time, Enemys =
-    {},
+local Configs, Games, Time =
     getgenv(),
     "Super Power Legends",
-    {},
-    tick(),
-    {}
+    tick()
 
 
     if game:GetService"CoreGui":FindFirstChild("CrazyDay") or Configs.loading then return end
+    local Signals, Notify = {} , {}
     Configs.loading = true
     local Files = "CrazyDay/" .. Games .. "/" .. game:GetService"Players":GetUserIdFromNameAsync(game:GetService"Players".LocalPlayer.Name)
     function AddSignal(a, b, c, d, e, f)
@@ -16,8 +14,10 @@ local Signals , Configs, Games, Notify, Time, Enemys =
     end
     AddSignal(
         game:GetService"Players".LocalPlayer.Idled:Connect(function ()
-            game:GetService"VirtualUser":CaptureController()
-            game:GetService"VirtualUser":ClickButton2(Vector2.new())
+            print("Click")
+            game:GetService"VirtualUser":Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            wait(1)
+            game:GetService"VirtualUser":Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         end),
         game:GetService"CoreGui".RobloxPromptGui.promptOverlay.ChildAdded:Connect(function (v)
             if (v.Name == "ErrorPrompt" and v:FindFirstChild("MessageArea")) and v.MessageArea:FindFirstChild("ErrorFrame") then
@@ -217,16 +217,6 @@ local Signals , Configs, Games, Notify, Time, Enemys =
                 return v.Name:split(q)[2] or 0
             end
         end
-    end
-
-    local function Enemy(q)
-        local thing = false
-        for i,v in ipairs(game:GetService("Workspace").Enemies:GetDescendants()) do
-            if v.Name == "EnemyName" and table.find(q,v.Text) and v.Parent.Parent.Parent. Humanoid.Health > 0 then
-                thing = v.Parent.Parent.Parent
-            end
-        end
-        return thing
     end
 
     local function QuestArea()
@@ -440,7 +430,7 @@ local Signals , Configs, Games, Notify, Time, Enemys =
                                 bv.Velocity = Vector3.new(0, 0, 0)
                             end
                             repeat
-                                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 7.5, 0) * CFrame.Angles(math.rad(-90),0,0)
+                                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 8, 0) * CFrame.Angles(math.rad(-90),0,0)
 
                                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(2)
@@ -458,5 +448,3 @@ local Signals , Configs, Games, Notify, Time, Enemys =
             end
         )
     )
-
-

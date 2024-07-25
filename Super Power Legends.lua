@@ -233,7 +233,7 @@ local Configs, Games, Time =
             if game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand then
                 game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand = false
             end
-            local bv = game:GetService"Players".LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity")
+            local bv = game:GetService"Players".LocalPlayer.Character.HumanoidRootPart:FindFirstChild("NameOfBodyVelocity")
             if bv then bv:Destroy() end
         end)
     end
@@ -422,8 +422,9 @@ local Configs, Games, Time =
                         local Stats = game:GetService("Players").LocalPlayer.Stats
                         if OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100 then
                             game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand = true
-                            if game:GetService"Players".LocalPlayer.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") == nil then
+                            if game:GetService"Players".LocalPlayer.Character.HumanoidRootPart:FindFirstChild("NameOfBodyVelocity") == nil then
                                 local bv = Instance.new("BodyVelocity")
+                                bv.Name = "NameOfBodyVelocity"
                                 bv.Parent =  game:GetService"Players".LocalPlayer.Character.HumanoidRootPart
                                 bv.MaxForce = Vector3.new(3000, 3000, 3000)
                                 bv.Velocity = Vector3.new(0, 0, 0)

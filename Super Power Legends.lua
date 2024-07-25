@@ -246,7 +246,7 @@ local Configs, Games, Time =
             Configs.WaitForCharacter = true
             if Signals["Deaded"] then Signals["Deaded"]:Disconnect() Signals["Deaded"] = nil end
             Signals["Adding"] = game:GetService"Players".LocalPlayer.CharacterAdded:Connect(function()
-                task.delay(1, function()
+                task.delay(1.55, function()
                     Configs.WaitForCharacter = false
                     if Signals["Adding"] then Signals["Adding"]:Disconnect() Signals["Adding"] = nil end
                 end)
@@ -462,9 +462,11 @@ local Configs, Games, Time =
                                 game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 10, 0) * CFrame.Angles(math.rad(-90),0,0)
 
                                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
+                                --[[
                                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(2)
                                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(1, QuestArea().HumanoidRootPart.Position)
                                 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(11, QuestArea().HumanoidRootPart.Position)
+                                --]]
 
                                 taks.wait()
                             until not OPTIONS["Auto Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Stats.CurrentQuest.Value == 0 or Stats.QuestProgress1.Value >= 100 or Configs.WaitForCharacter or GUI.Unloaded

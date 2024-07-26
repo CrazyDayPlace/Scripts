@@ -228,6 +228,17 @@ local Configs, Games, Time =
         return thing
     end
 
+    local function WorkingOnQuest()
+        local status_c = false
+        local Stats = game:GetService("Players").LocalPlayer.Stats
+        if OPTIONS["Selected Quest"].Value <= 5 and OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100 then
+            status_c = true
+        elseif OPTIONS["Selected Quest"].Value > 5 and OPTIONS["Selected Quest"].Value <= 8 and OPTIONS["Auto Quest"].Value and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100 then
+            status_c = true
+        end
+        return status_c
+    end
+
     function Disable()
         pcall(function()
             if game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand then
@@ -320,8 +331,7 @@ local Configs, Games, Time =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        local Stats = game:GetService("Players").LocalPlayer.Stats
-                        if (OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100) or Configs.WaitForCharacter then return end
+                        if WorkingOnQuest() or Configs.WaitForCharacter then return end
                         if OPTIONS["Enabled Psychics"].Value then
                             if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
                                 firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
@@ -341,8 +351,7 @@ local Configs, Games, Time =
             function()
                 while true do
                     if GUI.Unloaded then break end
-                    local Stats = game:GetService("Players").LocalPlayer.Stats
-                    if (OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100) or Configs.WaitForCharacter then return end
+                    if WorkingOnQuest() or Configs.WaitForCharacter then return end
                     if OPTIONS["Enabled Health"].Value and not (OPTIONS["Enabled Psychics"].Value or OPTIONS["Enabled Strength"].Value) then
                         if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
                             firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
@@ -362,8 +371,7 @@ local Configs, Games, Time =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        local Stats = game:GetService("Players").LocalPlayer.Stats
-                        if (OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100) or Configs.WaitForCharacter then return end
+                        if WorkingOnQuest() or Configs.WaitForCharacter then return end
                         if (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) or (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
@@ -393,8 +401,7 @@ local Configs, Games, Time =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        local Stats = game:GetService("Players").LocalPlayer.Stats
-                        if (OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100) or Configs.WaitForCharacter then return end
+                        if WorkingOnQuest() or Configs.WaitForCharacter then return end
                         if OPTIONS["Enabled Mobility"].Value and not game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand then
                             if not (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) and not (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                                 local LastPost = game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame
@@ -448,8 +455,7 @@ local Configs, Games, Time =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        local Stats = game:GetService("Players").LocalPlayer.Stats
-                        if OPTIONS["Auto Quest"].Value and QuestArea() and Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and Stats.QuestProgress1.Value < 100 and not Configs.WaitForCharacter then
+                        if OPTIONS["Selected Quest"].Value <= 5 and WorkingOnQuest() and not Configs.WaitForCharacter then
                             game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand = true
                             if game:GetService"Players".LocalPlayer.Character.HumanoidRootPart:FindFirstChild("NameOfBodyVelocity") == nil then
                                 local bv = Instance.new("BodyVelocity")
@@ -469,7 +475,26 @@ local Configs, Games, Time =
                                 --]]
 
                                 taks.wait()
-                            until not OPTIONS["Auto Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Stats.CurrentQuest.Value == 0 or Stats.QuestProgress1.Value >= 100 or Configs.WaitForCharacter or GUI.Unloaded
+                            until OPTIONS["Selected Quest"].Value > 5 or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or not WorkingOnQuest() or Configs.WaitForCharacter or GUI.Unloaded
+                        elseif OPTIONS["Selected Quest"].Value > 5 and OPTIONS["Selected Quest"].Value <= 8 and WorkingOnQuest() and not Configs.WaitForCharacter then
+                            game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand = true
+                            if game:GetService"Players".LocalPlayer.Character.HumanoidRootPart:FindFirstChild("NameOfBodyVelocity") == nil then
+                                local bv = Instance.new("BodyVelocity")
+                                bv.Name = "NameOfBodyVelocity"
+                                bv.Parent =  game:GetService"Players".LocalPlayer.Character.HumanoidRootPart
+                                bv.MaxForce = Vector3.new(3000, 3000, 3000)
+                                bv.Velocity = Vector3.new(0, 0, 0)
+                            end
+                            if not QuestArea() then
+                                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" .. OPTIONS["Selected Quest"].Value].CFrame * CFrame.new(0, 12.5, 0)
+                            elseif QuestArea() then
+                                repeat
+                                    game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 10, 0) * CFrame.Angles(math.rad(-90),0,0)
+
+                                    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
+                                    task.wait()
+                                until OPTIONS["Selected Quest"].Value <= 5 or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or not WorkingOnQuest() or Configs.WaitForCharacter or GUI.Unloaded
+                            end
                         else
                             Disable()
                         end

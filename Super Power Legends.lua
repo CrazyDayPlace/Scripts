@@ -102,7 +102,7 @@ local Configs, Games, Time =
     H.a[2]:AddDropdown("Selected Quest", {
         Title = "Select Quest:",
         Description = nil,
-        Values = {1, 2, 3, 4, 5},
+        Values = {1, 2, 3, 4, 5, 6, 7, 8},
         Multi = false,
         Default = 1,
         Callback = function (v)

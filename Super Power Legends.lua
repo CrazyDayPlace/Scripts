@@ -470,7 +470,13 @@ local Configs, Games, Time, BlackList =
                         if Configs.WaitForCharacter then return end
                         if OPTIONS["Enabled Strength"].Value then
                             if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
-                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
+                                local ss, ee = pcall(function()
+                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click) 
+                                end)
+                                if ee then
+                                    local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
+                                    game:GetService"VirtualInputManager":SendMouseButtonEvent(Q.AbsolutePosition.X + 27.5, Q.AbsolutePosition.Y + 50, 0, not game:GetService"UserInputService":IsMouseButtonPressed(Enum.UserInputType.MouseButton1), game, 0)
+                                end
                             else
                                 game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetPower"):FireServer(tonumber(Status("Power")))
                             end
@@ -491,7 +497,13 @@ local Configs, Games, Time, BlackList =
                         if Configs.WaitForCharacter then return end
                         if OPTIONS["Enabled Psychics"].Value then
                             if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
-                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
+                                local ss, ee = pcall(function()
+                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click) 
+                                end)
+                                if ee then
+                                    local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
+                                    game:GetService"VirtualInputManager":SendMouseButtonEvent(Q.AbsolutePosition.X + 27.5, Q.AbsolutePosition.Y + 50, 0, not game:GetService"UserInputService":IsMouseButtonPressed(Enum.UserInputType.MouseButton1), game, 0)
+                                end
                             else
                                 game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetPsychics"):FireServer(tonumber(Status("Psychics")))
                             end
@@ -511,7 +523,13 @@ local Configs, Games, Time, BlackList =
                     if Configs.WaitForCharacter then return end
                     if OPTIONS["Enabled Health"].Value and not (OPTIONS["Enabled Psychics"].Value or OPTIONS["Enabled Strength"].Value) then
                         if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
-                            firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
+                            local ss, ee = pcall(function()
+                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click) 
+                            end)
+                            if ee then
+                                local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
+                                game:GetService"VirtualInputManager":SendMouseButtonEvent(Q.AbsolutePosition.X + 27.5, Q.AbsolutePosition.Y + 50, 0, not game:GetService"UserInputService":IsMouseButtonPressed(Enum.UserInputType.MouseButton1), game, 0)
+                            end
                         else
                             game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer()
                         end

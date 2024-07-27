@@ -135,22 +135,15 @@ local Configs, Games, Time, BlackList =
         end
     })
 
-    H.b[1]:AddDropdown("Selected Location", {
-        Title = "Select EnemyLocation:",
+    H.b[1]:AddDropdown("Selected EnemyArea", {
+        Title = "Select EnemyArea:",
         Description = nil,
         Values = Locations,
         Multi = false,
         Default = 1,
         Callback = function (v)
-        end
-    })
-
-    H.b[1]:AddButton({
-        Title = "Teleport Selected EnemyLocation",
-        Description = nil,
-        Callback = function()
             pcall(function()
-                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"ReplicatedStorage".AreaHitbox[OPTIONS["Selected Location"].Value].CFrame
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"ReplicatedStorage".AreaHitbox[v].CFrame
             end)
         end
     })
@@ -216,7 +209,7 @@ local Configs, Games, Time, BlackList =
     do
         SAVE:SetLibrary(GUI)
         SAVE:SetFolder(Files)
-        SAVE:SetIgnoreIndexes({"Selected Location"})
+        SAVE:SetIgnoreIndexes({"Selected EnemyArea"})
         SAVE:IgnoreThemeSettings()
         WINDOW:SelectTab(1)
         WINDOW:Minimize()
@@ -514,7 +507,7 @@ local Configs, Games, Time, BlackList =
                                     game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" ..tostring(OPTIONS["Selected Quest"].Value)].CFrame * CFrame.new(0, - 5, 0)
                                 else
                                     repeat
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, -10, 0) * CFrame.Angles(math.rad(90),0,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 14.25, 0) * CFrame.Angles(math.rad(-90),0,0)
                                         game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                         task.wait()
                                     until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value == 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Configs.WaitForCharacter or GUI.Unloaded
@@ -525,7 +518,7 @@ local Configs, Games, Time, BlackList =
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area8"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
-                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, -10, 0) * CFrame.Angles(math.rad(90),0,0)
+                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, 14.25, 0) * CFrame.Angles(math.rad(-90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("8") or Configs.WaitForCharacter or GUI.Unloaded
@@ -535,7 +528,7 @@ local Configs, Games, Time, BlackList =
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area7"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
-                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, -10, 0) * CFrame.Angles(math.rad(90),0,0)
+                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, 14.25, 0) * CFrame.Angles(math.rad(-90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 8 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("7") or Configs.WaitForCharacter or GUI.Unloaded

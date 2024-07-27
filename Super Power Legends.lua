@@ -7,7 +7,7 @@ local Configs, Games, Time, BlackList =
 
 
     if not game:GetService"MarketplaceService":GetProductInfo(game.PlaceId).Name:match(Games) or game:GetService"CoreGui":FindFirstChild("CrazyDay") or Configs.loading then return end
-    local Signals, Notify, Locations = {} , {}, {}
+    local Signals, Notify, Locations = {} , {}, {["Enemy"] = {}, ["Train"] = {}, ["Shop"] = {}, ["Quest"] = {}, ["Misc"] = {}}
     Configs.loading = true
     local Files = "CrazyDay/" .. Games .. "/" .. game:GetService"Players":GetUserIdFromNameAsync(game:GetService"Players".LocalPlayer.Name)
     function AddSignal(a, b, c, d, e, f)
@@ -32,10 +32,34 @@ local Configs, Games, Time, BlackList =
         coroutine.create(
             function()
                 game:GetService"Players".LocalPlayer.PlayerGui:WaitForChild("DeathScreen").Enabled = false
-                for i, v in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("AreaHitbox"):GetChildren()) do
-                    table.insert(Locations, v.Name)
+                for i, v in ipairs(game:GetService"ReplicatedStorage":WaitForChild("AreaHitbox"):GetChildren()) do
+                    table.insert(Locations["Enemy"], v.Name)
                 end
-                table.sort(Locations, function(table, sort)
+                for i, v in ipairs(game:GetService"Workspace".TrainIndicators:GetChildren()) do
+                    table.insert(Locations["Train"], v.Name)
+                end
+                for i, v in ipairs(game:GetService"Workspace".Pads:GetChildren()) do
+                    if v.Name:match("Shop") then
+                        table.insert(Locations["Shop"], v.Name)
+                    elseif v.Name:match("Quest") then
+                        table.insert(Locations["Quest"], v.Name)
+                    elseif not v.Name:match("Shop") and not v.Name:match("Quest") then
+                        table.insert(Locations["Misc"], v.Name)
+                    end
+                end
+                table.sort(Locations["Enemy"], function(table, sort)
+                    return tonumber(table:match("%d+")) < tonumber(sort:match("%d+"))
+                end)
+                table.sort(Locations["Train"], function(table, sort)
+                    return tonumber(table:match("%d+")) < tonumber(sort:match("%d+"))
+                end)
+                table.sort(Locations["Shop"], function(table, sort)
+                    return tonumber(table:match("%d+")) < tonumber(sort:match("%d+"))
+                end)
+                table.sort(Locations["Quest"], function(table, sort)
+                    return tonumber(table:match("%d+")) < tonumber(sort:match("%d+"))
+                end)
+                table.sort(Locations["Misc"], function(table, sort)
                     return tonumber(table:match("%d+")) < tonumber(sort:match("%d+"))
                 end)
             end
@@ -66,7 +90,7 @@ local Configs, Games, Time, BlackList =
     }
     local H = {
         a = {TABS.a:AddSection("Train Sections"), TABS.a:AddSection("Quest Sections")},
-        b = {TABS.b:AddSection("Location")}
+        b = {TABS.b:AddSection("Main Location"), TABS.b:AddSection("Misc Location")}
     }
 
     H.a[1]:AddToggle("Enabled Strength", {
@@ -138,12 +162,64 @@ local Configs, Games, Time, BlackList =
     H.b[1]:AddDropdown("Selected EnemyArea", {
         Title = "Select EnemyArea:",
         Description = nil,
-        Values = Locations,
+        Values = Locations["Enemy"],
         Multi = false,
         Default = 1,
         Callback = function (v)
             pcall(function()
-                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"ReplicatedStorage".AreaHitbox[v].CFrame
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"ReplicatedStorage".AreaHitbox[v].CFrame * CFrame.new(0, 2, 0)
+            end)
+        end
+    })
+
+    H.b[1]:AddDropdown("Selected TrainArea", {
+        Title = "Select TrainArea:",
+        Description = nil,
+        Values = Locations["Train"],
+        Multi = false,
+        Default = 1,
+        Callback = function (v)
+            pcall(function()
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"Workspace".TrainIndicators[v].CFrame * CFrame.new(0, 2, 0)
+            end)
+        end
+    })
+
+    H.b[1]:AddDropdown("Selected ShopArea", {
+        Title = "Select ShopArea:",
+        Description = nil,
+        Values = Locations["Shop"],
+        Multi = false,
+        Default = 1,
+        Callback = function (v)
+            pcall(function()
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"Workspace".Pads[v].CFrame * CFrame.new(0, 2, 0)
+            end)
+        end
+    })
+
+    H.b[1]:AddDropdown("Selected QuestArea", {
+        Title = "Select QuestArea:",
+        Description = nil,
+        Values = Locations["Quest"],
+        Multi = false,
+        Default = 1,
+        Callback = function (v)
+            pcall(function()
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"Workspace".Pads[v].CFrame * CFrame.new(0, 2, 0)
+            end)
+        end
+    })
+
+    H.b[2]:AddDropdown("Selected Location", {
+        Title = "Select Location:",
+        Description = nil,
+        Values = Locations["Misc"],
+        Multi = false,
+        Default = 1,
+        Callback = function (v)
+            pcall(function()
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"Workspace".Pads[v].CFrame * CFrame.new(0, 2, 0)
             end)
         end
     })
@@ -209,7 +285,7 @@ local Configs, Games, Time, BlackList =
     do
         SAVE:SetLibrary(GUI)
         SAVE:SetFolder(Files)
-        SAVE:SetIgnoreIndexes({"Selected EnemyArea"})
+        SAVE:SetIgnoreIndexes({"Selected EnemyArea", "Selected TrainArea", "Selected ShopArea", "Selected QuestArea"})
         SAVE:IgnoreThemeSettings()
         WINDOW:SelectTab(1)
         WINDOW:Minimize()

@@ -79,7 +79,7 @@ local Configs, Games, Time, BlackList =
         Size = UDim2.fromOffset(500, 380),
         Acrylic = true,
         Theme = "Darker",
-        MinimizeKey = Enum.KeyCode.LeftControl,
+        MinimizeKey = Enum.KeyCode.LeftAlt,
         BlackScreen = false
     })
 
@@ -344,11 +344,13 @@ local Configs, Games, Time, BlackList =
     end
 
     local function Status(q)
+        local Q = 0
         for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
             if v.Name:match(q) and v:FindFirstChild("Top" .. q) then
-                return v.Name:split(q)[2] or 0
+                Q = v.Name:split(q)[2]
             end
         end
+        return Q
     end
 
     local function QuestArea(Q)

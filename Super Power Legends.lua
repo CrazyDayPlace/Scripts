@@ -167,6 +167,18 @@ local Configs, Games, Time, BlackList =
         end
     })
 
+    H.a[2]:AddInput("Selected EnemyDistance", {
+        Title = "Select EnemyDistance: ",
+        Description = nil,
+        Default = 12.5,
+        Placeholder = "Number Only.",
+        Numeric = true,
+        Finished = false,
+        Callback = function(v)
+            if not Configs.loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
+        end
+    })
+
     H.a[2]:AddToggle("Auto Quest", {
         Title = "Auto Quest",
         Description = nil,
@@ -609,7 +621,7 @@ local Configs, Games, Time, BlackList =
                                 else
                                     repeat
                                         Skill()
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, -12.35, 0) * CFrame.Angles(math.rad(90),0,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, -(tonumber(OPTIONS["Selected EnemyDistance"].Value) or 13), 0) * CFrame.Angles(math.rad(90),0,0)
                                         game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                         task.wait()
                                     until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value == 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Configs.WaitForCharacter or GUI.Unloaded
@@ -621,7 +633,7 @@ local Configs, Games, Time, BlackList =
                                     else
                                         repeat
                                             Skill("8")
-                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, -12.35, 0) * CFrame.Angles(math.rad(90),0,0)
+                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, -(tonumber(OPTIONS["Selected EnemyDistance"].Value) or 13), 0) * CFrame.Angles(math.rad(90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("8") or Configs.WaitForCharacter or GUI.Unloaded
@@ -632,7 +644,7 @@ local Configs, Games, Time, BlackList =
                                     else
                                         repeat
                                             Skill("7")
-                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, -12.35, 0) * CFrame.Angles(math.rad(90),0,0)
+                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, -(tonumber(OPTIONS["Selected EnemyDistance"].Value) or 13), 0) * CFrame.Angles(math.rad(90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 8 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("7") or Configs.WaitForCharacter or GUI.Unloaded

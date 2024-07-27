@@ -620,9 +620,9 @@ local Configs, Games, Time, BlackList =
                                     game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" ..tostring(OPTIONS["Selected Quest"].Value)].CFrame * CFrame.new(0, - 5, 0)
                                 else
                                     repeat
-                                        Skill()
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, -(tonumber(OPTIONS["Selected EnemyDistance"].Value) or 13), 0) * CFrame.Angles(math.rad(90),0,0)
                                         game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
+                                        Skill()
                                         task.wait()
                                     until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value == 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Configs.WaitForCharacter or GUI.Unloaded
                                 end
@@ -632,9 +632,9 @@ local Configs, Games, Time, BlackList =
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area8"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
-                                            Skill("8")
                                             game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, -(tonumber(OPTIONS["Selected EnemyDistance"].Value) or 13), 0) * CFrame.Angles(math.rad(90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
+                                            Skill("8")
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("8") or Configs.WaitForCharacter or GUI.Unloaded
                                     end
@@ -643,9 +643,9 @@ local Configs, Games, Time, BlackList =
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area7"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
-                                            Skill("7")
                                             game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, -(tonumber(OPTIONS["Selected EnemyDistance"].Value) or 13), 0) * CFrame.Angles(math.rad(90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
+                                            Skill("7")
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 8 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("7") or Configs.WaitForCharacter or GUI.Unloaded
                                     end

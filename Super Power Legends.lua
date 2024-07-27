@@ -7,7 +7,7 @@ local Configs, Games, Time, BlackList =
 
 
     if not game:GetService"MarketplaceService":GetProductInfo(game.PlaceId).Name:match(Games) or game:GetService"CoreGui":FindFirstChild("CrazyDay") or Configs.loading then return end
-    local Signals, Notify, Locations = {} , {}, {["Enemy"] = {}, ["Train"] = {}, ["Shop"] = {}, ["Quest"] = {}, ["Misc"] = {}}
+    local Signals, Notify, Locations, Skills = {} , {}, {["Enemy"] = {}, ["Train"] = {}, ["Shop"] = {}, ["Quest"] = {}, ["Misc"] = {}}, {}
     Configs.loading = true
     local Files = "CrazyDay/" .. Games .. "/" .. game:GetService"Players":GetUserIdFromNameAsync(game:GetService"Players".LocalPlayer.Name)
     function AddSignal(a, b, c, d, e, f)
@@ -150,6 +150,23 @@ local Configs, Games, Time, BlackList =
         end
     })
 
+    H.a[2]:AddDropdown("Selected Skills", {
+        Title = "Select Skills:",
+        Description = nil,
+        Values = {"FireBall1","Gammaray11"},
+        Multi = true,
+        Default = {nil},
+        Callback = function (v)
+            if not Configs.loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
+            Skills = {}
+            for index, value in pairs(v) do
+                if value == true then
+                    table.insert(Skills, index)
+                end
+            end
+        end
+    })
+
     H.a[2]:AddToggle("Auto Quest", {
         Title = "Auto Quest",
         Description = nil,
@@ -252,7 +269,7 @@ local Configs, Games, Time, BlackList =
                             Time = tick()
                             writefile(Files.."/settings/Configs.json",
                             [[
-                            {"objects":[{"idx":"Enabled Mobility","type":"Toggle","value":false},{"idx":"Enabled Psychics","type":"Toggle","value":false},{"idx":"Enabled Strength","type":"Toggle","value":false},{"idx":"Auto Save","type":"Toggle","value":true},{"idx":"Teleport Zone","type":"Toggle","value":false},{"idx":"Enabled Health","type":"Toggle","value":false}]}
+                            {"objects":[{"idx":"Auto Quest","type":"Toggle","value":false},{"idx":"Teleport Zone","type":"Toggle","value":false},{"idx":"Selected Quest","type":"Dropdown","mutli":false,"value":1},{"idx":"Enabled Mobility","type":"Toggle","value":false},{"idx":"Enabled Psychics","type":"Toggle","value":false},{"idx":"Enabled Strength","type":"Toggle","value":false},{"idx":"Selected Location","type":"Dropdown","mutli":false,"value":"MissionsFrame2"},{"idx":"Auto Save","type":"Toggle","value":true},{"idx":"Enabled Health","type":"Toggle","value":false},{"idx":"Selected Skills","type":"Dropdown","mutli":true,"value":[]}]}
                             ]])
                             task.wait(0.35)
                             do
@@ -274,7 +291,7 @@ local Configs, Games, Time, BlackList =
                     {
                         Title = "No",
                         Callback = function()
-                           setclipboard(tostring(readfile(Files.."/settings/Configs.json")))
+                           --setclipboard(tostring(readfile(Files.."/settings/Configs.json")))
                         end
                     }
                 }
@@ -379,6 +396,14 @@ local Configs, Games, Time, BlackList =
                 end)
             end)
         end)
+    end
+
+    function Skill(Q)
+        if #Skills >0 then
+            for i, v in ipairs(Skills) do
+                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(tonumber(v:match("%d+")), QuestArea((Q or nil)).HumanoidRootPart.Position)
+            end
+        end
     end
 
     coroutine.resume(
@@ -583,7 +608,8 @@ local Configs, Games, Time, BlackList =
                                     game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" ..tostring(OPTIONS["Selected Quest"].Value)].CFrame * CFrame.new(0, - 5, 0)
                                 else
                                     repeat
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 14.25, 0) * CFrame.Angles(math.rad(-90),0,0)
+                                        Skill()
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, -12.75, 0) * CFrame.Angles(math.rad(90),0,0)
                                         game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                         task.wait()
                                     until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value == 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Configs.WaitForCharacter or GUI.Unloaded
@@ -594,7 +620,8 @@ local Configs, Games, Time, BlackList =
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area8"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
-                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, 14.25, 0) * CFrame.Angles(math.rad(-90),0,0)
+                                            Skill("8")
+                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, -12.75, 0) * CFrame.Angles(math.rad(90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("8") or Configs.WaitForCharacter or GUI.Unloaded
@@ -604,7 +631,8 @@ local Configs, Games, Time, BlackList =
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area7"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
-                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, 14.25, 0) * CFrame.Angles(math.rad(-90),0,0)
+                                            Skill("7")
+                                            game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, -12.75, 0) * CFrame.Angles(math.rad(90),0,0)
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             task.wait()
                                         until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 8 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("7") or Configs.WaitForCharacter or GUI.Unloaded

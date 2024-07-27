@@ -264,12 +264,14 @@ local Configs, Games, Time, BlackList =
     end
 
 	function EquipTool(Q)
-        if game:GetService"Players".LocalPlayer.Backpack:FindFirstChild(Q) or game:GetService"Players".LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
-            local Tool = game:GetService"Players".LocalPlayer.Backpack:FindFirstChild(Q) or game:GetService"Players".LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
-            task.wait(0.35)
-            game:GetService"Players".LocalPlayer.Character.Humanoid:EquipTool(Tool)
+        local Tool
+        if Q and game:GetService"Players".LocalPlayer.Backpack:FindFirstChild(Q) and not game:GetService"Players".LocalPlayer.Character:FindFirstChild(Q) then
+            Tool = game:GetService"Players".LocalPlayer.Backpack:FindFirstChild(Q)
+        elseif not Q and game:GetService"Players".LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
+            Tool = game:GetService"Players".LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
         end
-	end      
+        if Tool then wait(0.4) game:GetService"Players".LocalPlayer.Character.Humanoid:EquipTool(Tool) end
+	end
 
     function Disable()
         pcall(function()
@@ -423,19 +425,19 @@ local Configs, Games, Time, BlackList =
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Health") and v:FindFirstChild("TopHealth") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,- 2.25,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-3,0)
                                     end
                                 end
                             else
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,- 2.25,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-3,0)
                                     end
                                 end
                             end
                         end
                     end)
-                    task.wait(0.25)
+                    task.wait(0.275)
                 end
             end
         )
@@ -505,11 +507,11 @@ local Configs, Games, Time, BlackList =
                     pcall(function()
                         if OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and not Configs.WaitForCharacter then
                             AddVelocity()
-                            EquipTool()
+                            EquipTool("Meele")
                             game:GetService"Players".LocalPlayer.Character.IsVisible.Value = false
                             if not table.find(BlackList, OPTIONS["Selected Quest"].Value) then
                                 if not QuestArea() then
-                                    game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" ..tostring(OPTIONS["Selected Quest"].Value)].CFrame
+                                    game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" ..tostring(OPTIONS["Selected Quest"].Value)].CFrame * CFrame.new(0, - 5, 0)
                                 else
                                     repeat
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea().HumanoidRootPart.CFrame * CFrame.new(0, 10, 0) * CFrame.Angles(math.rad(-90),0,0)
@@ -520,7 +522,7 @@ local Configs, Games, Time, BlackList =
                             elseif table.find(BlackList, OPTIONS["Selected Quest"].Value) then
                                 if OPTIONS["Selected Quest"].Value == 7 then
                                     if not QuestArea("8") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area8"].CFrame
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area8"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
                                             game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("8").HumanoidRootPart.CFrame * CFrame.new(0, 10, 0) * CFrame.Angles(math.rad(-90),0,0)
@@ -530,7 +532,7 @@ local Configs, Games, Time, BlackList =
                                     end
                                 elseif OPTIONS["Selected Quest"].Value == 8 then
                                     if not QuestArea("7") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area7"].CFrame
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area7"].CFrame * CFrame.new(0, - 5, 0)
                                     else
                                         repeat
                                             game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = QuestArea("7").HumanoidRootPart.CFrame * CFrame.new(0, 10, 0) * CFrame.Angles(math.rad(-90),0,0)

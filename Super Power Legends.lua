@@ -31,6 +31,7 @@ local Configs, Games, Time, BlackList =
     coroutine.resume(
         coroutine.create(
             function()
+                game:GetService"Players".LocalPlayer.PlayerGui:WaitForChild("DeathScreen").Enabled = false
                 for i, v in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("AreaHitbox"):GetChildren()) do
                     table.insert(Locations, v.Name)
                 end
@@ -262,6 +263,13 @@ local Configs, Games, Time, BlackList =
         return thing
     end
 
+	function EquipTool(Q)
+        if game:GetService"Players".LocalPlayer.Backpack:FindFirstChild(Q) or game:GetService"Players".LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
+            local Tool = game:GetService"Players".LocalPlayer.Backpack:FindFirstChild(Q) or game:GetService"Players".LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
+            task.wait(0.35)
+            game:GetService"Players".LocalPlayer.Character.Humanoid:EquipTool(Tool)
+        end
+	end      
 
     function Disable()
         pcall(function()
@@ -272,7 +280,7 @@ local Configs, Games, Time, BlackList =
             if bv then bv:Destroy() end
         end)
     end
-    
+
     function AddVelocity()
         pcall(function()
             game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand = true
@@ -294,7 +302,7 @@ local Configs, Games, Time, BlackList =
             Configs.WaitForCharacter = true
             if Signals["Deaded"] then Signals["Deaded"]:Disconnect() Signals["Deaded"] = nil end
             Signals["Adding"] = game:GetService"Players".LocalPlayer.CharacterAdded:Connect(function()
-                task.delay(2, function()
+                task.delay(3.25, function()
                     Configs.WaitForCharacter = false
                     if Signals["Adding"] then Signals["Adding"]:Disconnect() Signals["Adding"] = nil end
                 end)
@@ -415,13 +423,13 @@ local Configs, Games, Time, BlackList =
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Health") and v:FindFirstChild("TopHealth") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,- 1.75,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,- 2.25,0)
                                     end
                                 end
                             else
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,- 1.75,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,- 2.25,0)
                                     end
                                 end
                             end
@@ -442,6 +450,7 @@ local Configs, Games, Time, BlackList =
                     pcall(function()
                         if (OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value) or Configs.WaitForCharacter then return end
                         if OPTIONS["Enabled Mobility"].Value and not game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand then
+                            game:GetService"Players".LocalPlayer.Stats.MoveCooldown.Value = 0
                             if not (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) and not (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                                 local LastPost = game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame
                                 local TableOfSet = {1, -1, 1, -1}
@@ -496,6 +505,8 @@ local Configs, Games, Time, BlackList =
                     pcall(function()
                         if OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and not Configs.WaitForCharacter then
                             AddVelocity()
+                            EquipTool()
+                            game:GetService"Players".LocalPlayer.Character.IsVisible.Value = false
                             if not table.find(BlackList, OPTIONS["Selected Quest"].Value) then
                                 if not QuestArea() then
                                     game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").AreaHitbox["Area" ..tostring(OPTIONS["Selected Quest"].Value)].CFrame

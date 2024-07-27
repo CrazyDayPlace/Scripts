@@ -7,7 +7,7 @@ local Configs, Games, Time, BlackList =
 
 
     if not game:GetService"MarketplaceService":GetProductInfo(game.PlaceId).Name:match(Games) or game:GetService"CoreGui":FindFirstChild("CrazyDay") or Configs.loading then return end
-    local Signals, Notify = {} , {}
+    local Signals, Notify, Locations = {} , {}, {}
     Configs.loading = true
     local Files = "CrazyDay/" .. Games .. "/" .. game:GetService"Players":GetUserIdFromNameAsync(game:GetService"Players".LocalPlayer.Name)
     function AddSignal(a, b, c, d, e, f)
@@ -28,6 +28,18 @@ local Configs, Games, Time, BlackList =
             end
         end)
     )
+    coroutine.resume(
+        coroutine.create(
+            function()
+                for i, v in ipairs(game:GetService("ReplicatedStorage"):WaitForChild("AreaHitbox"):GetChildren()) do
+                    table.insert(Locations, v.Name)
+                end
+                table.sort(Locations, function(table, sort)
+                    return tonumber(table:match("%d+")) < tonumber(sort:match("%d+"))
+                end)
+            end
+        )
+    )
     local GUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/CrazyDayPlace/Place-One-/main/Gui.lua"))()
     local SAVE = loadstring(game:HttpGet("https://raw.githubusercontent.com/CrazyDayPlace/Place-One-/main/Save.lua"))()
     local INT = loadstring(game:HttpGet("https://raw.githubusercontent.com/CrazyDayPlace/Place-One-/main/interfaces.lua"))()
@@ -47,11 +59,13 @@ local Configs, Games, Time, BlackList =
     })
 
     local TABS = {
-        a = WINDOW:AddTab({Title = "General", Name = nil, Icon = "align-justify"}),
-        b = WINDOW:AddTab({ Title = "Settings", Icon = "settings"})
+        a = WINDOW:AddTab({Title = "General", Name = nil, Icon = "layers"}),
+        b = WINDOW:AddTab({Title = "Location", Name = nil, Icon = "map-pin"}),
+        c = WINDOW:AddTab({ Title = "Settings", Icon = "settings"})
     }
     local H = {
-        a = {TABS.a:AddSection("Train Sections"), TABS.a:AddSection("Quest Sections")}
+        a = {TABS.a:AddSection("Train Sections"), TABS.a:AddSection("Quest Sections")},
+        b = {TABS.b:AddSection("Location")}
     }
 
     H.a[1]:AddToggle("Enabled Strength", {
@@ -120,13 +134,32 @@ local Configs, Games, Time, BlackList =
         end
     })
 
+    H.b[1]:AddDropdown("Selected Location", {
+        Title = "Select EnemyLocation:",
+        Description = nil,
+        Values = Locations,
+        Multi = false,
+        Default = 1,
+        Callback = function (v)
+        end
+    })
+
+    H.b[1]:AddButton({
+        Title = "Teleport Selected EnemyLocation",
+        Description = nil,
+        Callback = function()
+            pcall(function()
+                game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService"ReplicatedStorage".AreaHitbox[OPTIONS["Selected Location"].Value].CFrame
+            end)
+        end
+    })
 
     INT:SetLibrary(GUI)
     INT:SetFolder(Files)
-    INT:BuildInterfaceSection(TABS.b)
-    H.b = TABS.b:AddSection("Settings")
+    INT:BuildInterfaceSection(TABS.c)
+    H.c = TABS.c:AddSection("Settings")
 
-    H.b:AddToggle("Auto Save", {
+    H.c:AddToggle("Auto Save", {
         Title = "Auto Save",
         Description = "Automatically saves all configuration settings.",
         Default = true,
@@ -135,7 +168,7 @@ local Configs, Games, Time, BlackList =
         end
     })
 
-    H.b:AddButton({
+    H.c:AddButton({
         Title = "Reset all configs",
         Description = "Press the button to reset all configuration to default.",
         Callback = function()
@@ -171,7 +204,7 @@ local Configs, Games, Time, BlackList =
                     {
                         Title = "No",
                         Callback = function()
-                           -- setclipboard(tostring(readfile(Files.."/settings/Configs.json")))
+                           setclipboard(tostring(readfile(Files.."/settings/Configs.json")))
                         end
                     }
                 }
@@ -179,10 +212,10 @@ local Configs, Games, Time, BlackList =
         end
     })
 
-
     do
         SAVE:SetLibrary(GUI)
         SAVE:SetFolder(Files)
+        SAVE:SetIgnoreIndexes({"Selected Location"})
         SAVE:IgnoreThemeSettings()
         WINDOW:SelectTab(1)
         WINDOW:Minimize()

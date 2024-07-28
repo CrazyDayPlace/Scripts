@@ -471,7 +471,7 @@ local Configs, Games, Time, BlackList =
                         if OPTIONS["Enabled Strength"].Value then
                             if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
                                 local ss, ee = pcall(function()
-                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click) 
+                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
                                 end)
                                 if ee then
                                     local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
@@ -498,7 +498,7 @@ local Configs, Games, Time, BlackList =
                         if OPTIONS["Enabled Psychics"].Value then
                             if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
                                 local ss, ee = pcall(function()
-                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click) 
+                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
                                 end)
                                 if ee then
                                     local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
@@ -521,10 +521,10 @@ local Configs, Games, Time, BlackList =
                 while true do
                     if GUI.Unloaded then break end
                     if Configs.WaitForCharacter then return end
-                    if OPTIONS["Enabled Health"].Value and not (OPTIONS["Enabled Psychics"].Value or OPTIONS["Enabled Strength"].Value) then
+                    if OPTIONS["Enabled Health"].Value then
                         if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
                             local ss, ee = pcall(function()
-                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click) 
+                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
                             end)
                             if ee then
                                 local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
@@ -534,7 +534,7 @@ local Configs, Games, Time, BlackList =
                             game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer()
                         end
                     end
-                    task.wait(0.5)
+                    task.wait(0.45)
                 end
             end
         )

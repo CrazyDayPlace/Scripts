@@ -520,21 +520,23 @@ local Configs, Games, Time, BlackList =
             function()
                 while true do
                     if GUI.Unloaded then break end
-                    if Configs.WaitForCharacter then return end
-                    if OPTIONS["Enabled Health"].Value then
-                        if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
-                            local ss, ee = pcall(function()
-                                firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
-                            end)
-                            if ee then
-                                local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
-                                game:GetService"VirtualInputManager":SendMouseButtonEvent(Q.AbsolutePosition.X + 27.5, Q.AbsolutePosition.Y + 50, 0, not game:GetService"UserInputService":IsMouseButtonPressed(Enum.UserInputType.MouseButton1), game, 0)
+                    pcall(function()
+                        if Configs.WaitForCharacter then return end
+                        if OPTIONS["Enabled Health"].Value then
+                            if not game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Toggled.Value then
+                                local ss, ee = pcall(function()
+                                    firesignal(game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button.MouseButton1Click)
+                                end)
+                                if ee then
+                                    local Q = game:GetService"Players".LocalPlayer.PlayerGui.MainGame.Menu.GetMore.Button
+                                    game:GetService"VirtualInputManager":SendMouseButtonEvent(Q.AbsolutePosition.X + 27.5, Q.AbsolutePosition.Y + 50, 0, not game:GetService"UserInputService":IsMouseButtonPressed(Enum.UserInputType.MouseButton1), game, 0)
+                                end
+                            else
+                                game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer()
                             end
-                        else
-                            game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer()
                         end
-                    end
-                    task.wait(0.45)
+                    end)
+                    task.wait(0.475)
                 end
             end
         )

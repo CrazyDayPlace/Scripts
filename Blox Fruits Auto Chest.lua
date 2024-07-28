@@ -1,4 +1,12 @@
 repeat wait() until game:IsLoaded()
+game:GetService"CoreGui".RobloxPromptGui.promptOverlay.ChildAdded:Connect(function (v)
+    if (v.Name == "ErrorPrompt" and v:FindFirstChild("MessageArea")) and v.MessageArea:FindFirstChild("ErrorFrame") then
+        repeat
+            game:GetService("TeleportService"):Teleport(game.PlaceId)
+            wait(1)
+        until not v.Parent
+    end
+end)
 while true and task.wait() do
     if game:GetService("Players").LocalPlayer.PlayerGui.Main:FindFirstChild("ChooseTeam") then
         local Q = game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.ViewportFrame

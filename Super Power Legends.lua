@@ -574,20 +574,20 @@ local Configs, Games, Time, BlackList =
                         if (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) or (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
-                                    if v.Name:match("Health") and v:FindFirstChild("TopHealth") then
+                                    if v.Name:match("Health") and v:FindFirstChild("TopHealth") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 10 then
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end
                             else
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
-                                    if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") then
+                                    if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 10 then
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end
                             end
                         end
                     end)
-                    task.wait(0.275)
+                    task.wait()
                 end
             end
         )
@@ -654,16 +654,19 @@ local Configs, Games, Time, BlackList =
             function()
                 while true do
                     if GUI.Unloaded then break end
-                    if not OPTIONS["Auto Quest"].Value and OPTIONS["Auto EquipWeight"].Value then
-                        if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Weight") then
-                            EquipTool("Weight")
-                        else
-                            if tonumber(game:GetService("Players").LocalPlayer.Stats.WeightSelected.Value) ~= tonumber(OPTIONS["Selected WeightNumber"].Value) then
-                                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("ChangeWeight"):FireServer(tonumber(OPTIONS["Selected WeightNumber"].Value))
+                    pcall(function()
+                        if Configs.WaitForCharacter then return end
+                        if not OPTIONS["Auto Quest"].Value and OPTIONS["Auto EquipWeight"].Value then
+                            if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Weight") then
+                                EquipTool("Weight")
+                            else
+                                if tonumber(game:GetService("Players").LocalPlayer.Stats.WeightSelected.Value) ~= tonumber(OPTIONS["Selected WeightNumber"].Value) then
+                                    game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("ChangeWeight"):FireServer(tonumber(OPTIONS["Selected WeightNumber"].Value))
+                                end
                             end
                         end
-                    end
-                    wait()
+                    end)
+                    task.wait(0.0025)
                 end
             end
         )

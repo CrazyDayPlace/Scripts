@@ -142,7 +142,7 @@ local Configs, Games, Time, BlackList =
     H.a[2]:AddDropdown("Selected Quest", {
         Title = "Select Quest:",
         Description = nil,
-        Values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+        Values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
         Multi = false,
         Default = 1,
         Callback = function (v)
@@ -374,6 +374,18 @@ local Configs, Games, Time, BlackList =
         return Q
     end
 
+    local function QuestMob()
+        if OPTIONS["Selected Quest"].Value < 11 then
+            return OPTIONS["Selected Quest"].Value
+        else
+            if OPTIONS["Selected Quest"].Value == 11 then
+                return 14
+            elseif OPTIONS["Selected Quest"].Value == 12 then
+                return 15
+            end
+        end
+    end
+
     local function QuestArea(Q)
         local thing = false
         for i,v in ipairs(game:GetService("Workspace").Enemies["Area" .. (Q or tostring(OPTIONS["Selected Quest"].Value))]:GetChildren()) do
@@ -570,7 +582,7 @@ local Configs, Games, Time, BlackList =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        if (OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value) or Configs.WaitForCharacter then return end
+                        if (OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == QuestMob()) or Configs.WaitForCharacter then return end
                         if (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) or (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
@@ -606,7 +618,7 @@ local Configs, Games, Time, BlackList =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        if (OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value) or Configs.WaitForCharacter then return end
+                        if (OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == QuestMob()) or Configs.WaitForCharacter then return end
                         if OPTIONS["Enabled Mobility"].Value and not game:GetService"Players".LocalPlayer.Character.Humanoid.PlatformStand then
                             game:GetService"Players".LocalPlayer.Stats.MoveCooldown.Value = 0
                             if not (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) and not (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
@@ -635,10 +647,10 @@ local Configs, Games, Time, BlackList =
                     if GUI.Unloaded then break end
                     if OPTIONS["Auto Quest"].Value and not Configs.WaitForCharacter then
                         local Stats = game:GetService("Players").LocalPlayer.Stats
-                        if Stats.SideQuestCooldown.Value == 0 and Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value then
+                        if Stats.SideQuestCooldown.Value == 0 and Stats.CurrentQuest.Value ~= QuestMob() then
                             Disable()
                             if Stats.CurrentQuest.Value == 0 then
-                                game:GetService("ReplicatedStorage").Events.StartSideQuest:FireServer(OPTIONS["Selected Quest"].Value)
+                                game:GetService("ReplicatedStorage").Events.StartSideQuest:FireServer(QuestMob())
                             else
                                 game:GetService("ReplicatedStorage").Events.EndSideQuest:FireServer()
                             end
@@ -684,7 +696,7 @@ local Configs, Games, Time, BlackList =
                 while true do
                     if GUI.Unloaded then break end
                     pcall(function()
-                        if OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == OPTIONS["Selected Quest"].Value and not Configs.WaitForCharacter then
+                        if OPTIONS["Auto Quest"].Value and game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value == QuestMob() and not Configs.WaitForCharacter then
                             AddVelocity()
                             EquipTool("Meele")
                             game:GetService"Players".LocalPlayer.Character.IsVisible.Value = false
@@ -697,7 +709,7 @@ local Configs, Games, Time, BlackList =
                                         game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                         Skill()
                                         task.wait()
-                                    until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value == 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Configs.WaitForCharacter or GUI.Unloaded
+                                    until not OPTIONS["Auto Quest"].Value or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= QuestMob() or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea() or Configs.WaitForCharacter or GUI.Unloaded
                                 end
                             elseif table.find(BlackList, OPTIONS["Selected Quest"].Value) then
                                 if OPTIONS["Selected Quest"].Value == 7 then
@@ -709,7 +721,7 @@ local Configs, Games, Time, BlackList =
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             Skill("8")
                                             task.wait()
-                                        until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("8") or Configs.WaitForCharacter or GUI.Unloaded
+                                        until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 7 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= QuestMob() or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("8") or Configs.WaitForCharacter or GUI.Unloaded
                                     end
                                 elseif OPTIONS["Selected Quest"].Value == 8 then
                                     if not QuestArea("7") then
@@ -720,7 +732,7 @@ local Configs, Games, Time, BlackList =
                                             game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Ability"):FireServer(7)
                                             Skill("7")
                                             task.wait()
-                                        until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 8 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= OPTIONS["Selected Quest"].Value or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("7") or Configs.WaitForCharacter or GUI.Unloaded
+                                        until not OPTIONS["Auto Quest"].Value or OPTIONS["Selected Quest"].Value ~= 8 or game:GetService("Players").LocalPlayer.Stats.CurrentQuest.Value ~= QuestMob() or game:GetService"Players".LocalPlayer.Character.Humanoid.Health <= 0 or not QuestArea("7") or Configs.WaitForCharacter or GUI.Unloaded
                                     end
                                 end
                             end

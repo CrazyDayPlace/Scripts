@@ -425,7 +425,7 @@ local Configs, Games, Time, BlackList =
             Configs.WaitForCharacter = true
             if Signals["Deaded"] then Signals["Deaded"]:Disconnect() Signals["Deaded"] = nil end
             Signals["Adding"] = game:GetService"Players".LocalPlayer.CharacterAdded:Connect(function()
-                task.delay(2.75, function()
+                task.delay(0.75, function()
                     Configs.WaitForCharacter = false
                     if Signals["Adding"] then Signals["Adding"]:Disconnect() Signals["Adding"] = nil end
                 end)
@@ -574,13 +574,13 @@ local Configs, Games, Time, BlackList =
                         if (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) or (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
-                                    if v.Name:match("Health") and v:FindFirstChild("TopHealth") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 10 then
+                                    if v.Name:match("Health") and v:FindFirstChild("TopHealth") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 15 then
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end
                             else
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
-                                    if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 10 then
+                                    if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 15 then
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end

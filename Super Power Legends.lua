@@ -89,7 +89,7 @@ local Configs, Games, Time, BlackList =
         c = WINDOW:AddTab({ Title = "Settings", Icon = "settings"})
     }
     local H = {
-        a = {TABS.a:AddSection("Train Sections"), TABS.a:AddSection("Quest Sections")},
+        a = {TABS.a:AddSection("Train Sections"), TABS.a:AddSection("Quest Sections") , TABS.a:AddSection("Weight Sections")},
         b = {TABS.b:AddSection("Main Location"), TABS.b:AddSection("Misc Location")}
     }
 
@@ -181,6 +181,27 @@ local Configs, Games, Time, BlackList =
 
     H.a[2]:AddToggle("Auto Quest", {
         Title = "Auto Quest",
+        Description = nil,
+        Default = false,
+        Callback = function (v)
+            if not Configs.loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
+        end
+    })
+
+    H.a[3]:AddInput("Selected WeightNumber", {
+        Title = "Select WeightNumber: ",
+        Description = nil,
+        Default = 1,
+        Placeholder = "Number Only.",
+        Numeric = true,
+        Finished = false,
+        Callback = function(v)
+            if not Configs.loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
+        end
+    })
+
+    H.a[3]:AddToggle("Auto EquipWeight", {
+        Title = "Auto EquipWeight",
         Description = nil,
         Default = false,
         Callback = function (v)
@@ -460,7 +481,6 @@ local Configs, Games, Time, BlackList =
         )
     )
 
-
     coroutine.resume(
         coroutine.create(
             function()
@@ -532,11 +552,13 @@ local Configs, Games, Time, BlackList =
                                     game:GetService"VirtualInputManager":SendMouseButtonEvent(Q.AbsolutePosition.X + 27.5, Q.AbsolutePosition.Y + 50, 0, not game:GetService"UserInputService":IsMouseButtonPressed(Enum.UserInputType.MouseButton1), game, 0)
                                 end
                             else
-                                game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer()
+                                if not OPTIONS["Teleport Zone"].Value then
+                                    game:GetService"ReplicatedStorage":WaitForChild("Events"):WaitForChild("GetHealth"):FireServer() 
+                                end
                             end
                         end
                     end)
-                    task.wait(0.475)
+                    task.wait(0.35)
                 end
             end
         )
@@ -553,13 +575,13 @@ local Configs, Games, Time, BlackList =
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Health") and v:FindFirstChild("TopHealth") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-3,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end
                             else
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
                                     if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") then
-                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-3,0)
+                                        game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end
                             end
@@ -622,6 +644,26 @@ local Configs, Games, Time, BlackList =
                         end
                     end
                     task.wait()
+                end
+            end
+        )
+    )
+
+    coroutine.resume(
+        coroutine.create(
+            function()
+                while true do
+                    if GUI.Unloaded then break end
+                    if not OPTIONS["Auto Quest"].Value and OPTIONS["Auto EquipWeight"].Value then
+                        if game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Weight") then
+                            EquipTool("Weight")
+                        else
+                            if tonumber(game:GetService("Players").LocalPlayer.Stats.WeightSelected.Value) ~= tonumber(OPTIONS["Selected WeightNumber"].Value) then
+                                game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("ChangeWeight"):FireServer(tonumber(OPTIONS["Selected WeightNumber"].Value))
+                            end
+                        end
+                    end
+                    wait()
                 end
             end
         )

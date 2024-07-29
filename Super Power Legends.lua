@@ -574,13 +574,13 @@ local Configs, Games, Time, BlackList =
                         if (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Health"].Value) or (OPTIONS["Teleport Zone"].Value and OPTIONS["Enabled Psychics"].Value) then
                             if OPTIONS["Enabled Health"].Value then
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
-                                    if v.Name:match("Health") and v:FindFirstChild("TopHealth") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 10 then
+                                    if v.Name:match("Health") and v:FindFirstChild("TopHealth") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 5 then
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end
                             else
                                 for i,v in ipairs(game:GetService("Workspace").TrainIndicators:GetChildren()) do
-                                    if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 10 then
+                                    if v.Name:match("Psychics") and v:FindFirstChild("TopPsychics") and (game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.Position - game:GetService("ReplicatedStorage").Zones[v.Name].Position).Magnitude >= 5 then
                                         game:GetService"Players".LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("ReplicatedStorage").Zones[v.Name].CFrame * CFrame.new(0,-2.75,0)
                                     end
                                 end

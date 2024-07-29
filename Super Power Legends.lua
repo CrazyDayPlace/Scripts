@@ -335,7 +335,7 @@ local Configs, Games, Time, BlackList =
     do
         SAVE:SetLibrary(GUI)
         SAVE:SetFolder(Files)
-        SAVE:SetIgnoreIndexes({"Selected EnemyArea", "Selected TrainArea", "Selected ShopArea", "Selected QuestArea"})
+        SAVE:SetIgnoreIndexes({"Selected EnemyArea", "Selected TrainArea", "Selected ShopArea", "Selected QuestArea", "Selected Location"})
         SAVE:IgnoreThemeSettings()
         WINDOW:SelectTab(1)
         WINDOW:Minimize()

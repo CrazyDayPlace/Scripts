@@ -51,7 +51,9 @@ local Configs, Games, Time, Players =
         Multi = false,
         Default = 1,
         Callback = function (v)
+            if not Configs.Loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
             Paragraph["MacroInformation"]:SetDesc("Selected File: "..(v or "None").."\nCurrent Time: 0.000\nMacro Status: None\nMacro Step: 0") Macro.Values["Data"] = {}
+            if not Configs.Loading and OPTIONS["Play Macro"].Value then OPTIONS["Play Macro"]:SetValue(false) OPTIONS["Play Macro"]:SetValue(true) end
         end
     })
 
@@ -148,6 +150,7 @@ local Configs, Games, Time, Players =
         Description = nil,
         Default = true,
         Callback = function (v)
+            if not Configs.Loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
             Paragraph["MacroInformation"].Frame.Visible = v
             if not v and Notify["MacroInformation"] then Notify["MacroInformation"]:Close() Notify["MacroInformation"] = nil end
         end
@@ -167,7 +170,7 @@ local Configs, Games, Time, Players =
         Description = nil,
         Default = false,
         Callback = function (v)
-
+            if not Configs.Loading and OPTIONS["Auto Save"].Value then SAVE:Save("Configs") end
         end
     })
 
@@ -182,7 +185,7 @@ local Configs, Games, Time, Players =
                     Content = nil,
                     SubContent = nil,
                     Show = false,
-                    Duration = 9e9
+                    Duration = (9e9 * 9e9) + (9e9 * 9e9)
                 })
             end
         else
@@ -204,7 +207,7 @@ local Configs, Games, Time, Players =
                     Content = nil,
                     SubContent = nil,
                     Show = false,
-                    Duration = 9e9
+                    Duration = (9e9 * 9e9) + (9e9 * 9e9)
                 })
             end
         else
@@ -215,11 +218,20 @@ local Configs, Games, Time, Players =
         end
     end)
 
-    do
-        INT:SetLibrary(GUI)
-        INT:SetFolder(Macro.Files)
-        INT:BuildInterfaceSection(TABS.B)
+    INT:SetLibrary(GUI)
+    INT:SetFolder(Macro.Files)
+    INT:BuildInterfaceSection(TABS.B)
+    SECTIONS.SX = TABS.B:AddSection("Settings")
+    SECTIONS.SX:AddToggle("Auto Save",{
+        Title = "Auto Save",
+        Description = "Automatically saves all configuration settings.",
+        Default = true,
+        Callback = function (v)
+            if not Configs.Loading then SAVE:Save("Configs") end
+        end
+    })
 
+    do
         SAVE:SetLibrary(GUI)
         SAVE:SetFolder(Macro.Files)
         SAVE:SetIgnoreIndexes({"Record Macro", "Create File"})
@@ -241,7 +253,7 @@ local Configs, Games, Time, Players =
             Content = "Loaded Ui In "..tostring(Secs .. Mils)..".s Press "..(OPTIONS["MenuKeybind"].Value or GUI.MinimizeKey.Name).." For Show, Hide Ui",
             SubContent = nil,
             Show = false,
-            Duration = 9e9 * 9e9
+            Duration = (9e9 * 9e9) + (9e9 * 9e9)
         })
         FUNCTIONS.Signals["Loaded"] = WINDOW.Root:GetPropertyChangedSignal("Visible"):Connect(function()
             Notify["Loaded"]:Close() FUNCTIONS.Signals["Loaded"]:Disconnect() FUNCTIONS.Signals["Loaded"] = nil
@@ -378,7 +390,7 @@ local Configs, Games, Time, Players =
                             SubContent = "\nNone",
                             Show = false,
                             LabelPos = 30,
-                            Duration = 9e9 * 9e9
+                            Duration = (9e9 * 9e9) + (9e9 * 9e9)
                         })
                     elseif WINDOW.Root.Visible and OPTIONS["Show MacroInformation"].Value and Notify["MacroInformation"] then
                         Notify["MacroInformation"]:Close()
@@ -592,15 +604,6 @@ local Configs, Games, Time, Players =
                         else
                             Paragraph["MacroInformation"]:SetDesc("Selected File: "..(OPTIONS["Selected File"].Value or "None").."\nCurrent Time: "..tostring(Macro.Time).."\nMacro Status: None\nMacro Step: None")
                         end
-                    end
-                    if Configs.LastPlaying and Configs.LastPlaying ~= OPTIONS["Selected File"].Value then
-                        Configs.Playing = nil
-                        Configs.Data = nil
-                        Configs.Status = nil
-                        Configs.LastPlaying = nil
-                        OPTIONS["Play Macro"]:SetValue(false)
-                        task.wait(0.0025)
-                        OPTIONS["Play Macro"]:SetValue(true)
                     end
                 end
             end

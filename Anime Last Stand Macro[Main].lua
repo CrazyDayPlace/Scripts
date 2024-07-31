@@ -284,11 +284,11 @@ local Configs, Games, Time, Players =
         return Players.LocalPlayer.Cash.Value
     end
 
-    local function UpgradeCost()
+    local function UpgradeCost(X)
         local Upgrade
         if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Upgrade") and game:GetService("Players").LocalPlayer.PlayerGui.Upgrade.BG.Bottom.Upgrade.Value.Text ~= "" then
             local Values = game:GetService("Players").LocalPlayer.PlayerGui.Upgrade.BG.Bottom.Upgrade.Value.Text:split("$")[2]
-            if tonumber(MoneyCost()) >= tonumber(FUNCTIONS:StringToNum(Values)) then
+            if tonumber(X) >= tonumber(FUNCTIONS:StringToNum(Values)) then
                 Upgrade = Values
             end
         end
@@ -308,8 +308,8 @@ local Configs, Games, Time, Players =
         end
     end
 
-    local function UnitPlaceRequest(Q)
-        if tonumber(MoneyCost()) >= tonumber(UnitsSlot(Q)) then
+    local function UnitPlaceRequest(Q, X)
+        if tonumber(X) >= tonumber(UnitsSlot(Q)) then
             return true
         end
     end
@@ -419,9 +419,10 @@ local Configs, Games, Time, Players =
                     task.spawn(
                         function()
                             if not GUI.Unloaded and OPTIONS["Record Macro"].Value and ((self.Name == "PlaceTower" and method == "FireServer") or (self.Name == "Upgrade" and method == "InvokeServer") or (self.Name == "Sell" and method == "InvokeServer") or (self.Name == "ChangeTargeting" and method == "InvokeServer")) then
-                                if self.Name == "PlaceTower" then
+                                local LastMoney = MoneyCost()
+                                if self.Name == "PlaceTower" and UnitPlaceRequest(arg[1],LastMoney) then
+                                    if ItsLimitedUnit(arg[1]) then return end
                                     local Unit, UCFrame = arg[1], arg[2]
-                                    if not UnitPlaceRequest(Unit) or ItsLimitedUnit(Unit) then return end
                                     MacroOfStepTables({
                                         ["Type"] = tostring(self.Name),
                                         ["Time"] = tostring(Macro.Time),
@@ -431,14 +432,13 @@ local Configs, Games, Time, Players =
                                         ["CFrame"] = tostring(UCFrame)
                                     })
                                     writemacro()
-                                elseif self.Name == "Upgrade" then
+                                elseif self.Name == "Upgrade" and UpgradeCost(LastMoney) then
                                     local Unit = arg[1]
-                                    if not UpgradeCost() then return end
                                     MacroOfStepTables({
                                         ["Type"] = tostring(self.Name),
                                         ["Time"] = tostring(Macro.Time),
                                         ["Wave"] = tostring(Wave()),
-                                        ["Money"] = tostring(UpgradeCost()),
+                                        ["Money"] = tostring(UpgradeCost(LastMoney)),
                                         ["Unit"] = tostring(Unit.Name),
                                         ["CFrame"] = tostring(Unit:WaitForChild("UnitHighlight").Position)
                                     })
@@ -465,8 +465,8 @@ local Configs, Games, Time, Players =
     )
 
     OPTIONS["Play Macro"]:OnChanged(
-        function() task.wait(0.125)
-            if game:GetService("ReplicatedStorage"):FindFirstChild("GameStarted") == nil then return end
+        function()
+            if game:GetService("ReplicatedStorage"):FindFirstChild("GameStarted") == nil then return end task.wait(0.025)
             if OPTIONS["Play Macro"].Value and ListFinds(OPTIONS["Selected File"].Value) then Configs.LastPlaying = OPTIONS["Selected File"].Value
                 Configs.Playing = game:GetService("HttpService"):JSONDecode(readfile(string.format("CrazyDay/"..Games.."/Macro/".."%s.json",Configs.LastPlaying)))
                 if (Configs.LastPlaying and Configs.LastPlaying ~= OPTIONS["Selected File"].Value) or Configs.Playing.Data == nil or not ListFinds(Configs.LastPlaying) then
@@ -551,17 +551,6 @@ local Configs, Games, Time, Players =
             function()
                 while true and wait() do
                     if GUI.Unloaded then break end
-                    if Configs.LastPlaying and Configs.LastPlaying ~= OPTIONS["Selected File"].Value then
-                        Configs.Playing = nil
-                        Configs.Data = nil
-                        Configs.Status = nil
-                        Configs.LastPlaying = nil
-                            if OPTIONS["Play Macro"].Value then
-                            OPTIONS["Play Macro"]:SetValue(false)
-                                task.wait(0.25)
-                            OPTIONS["Play Macro"]:SetValue(true)
-                        end
-                    end
                     if Notify["MacroInformation"] then local cl, cn = string.gsub(Notify["MacroInformation"].SubContentLabel.Text, "\n", "")
                         if OPTIONS["Record Macro"].Value and game:GetService("ReplicatedStorage"):FindFirstChild("GameStarted") then local Data = Macro.Values.Data[tostring(MacroOfStep())]
                             local LastValue = ""
@@ -603,6 +592,15 @@ local Configs, Games, Time, Players =
                         else
                             Paragraph["MacroInformation"]:SetDesc("Selected File: "..(OPTIONS["Selected File"].Value or "None").."\nCurrent Time: "..tostring(Macro.Time).."\nMacro Status: None\nMacro Step: None")
                         end
+                    end
+                    if Configs.LastPlaying and Configs.LastPlaying ~= OPTIONS["Selected File"].Value then
+                        Configs.Playing = nil
+                        Configs.Data = nil
+                        Configs.Status = nil
+                        Configs.LastPlaying = nil
+                        OPTIONS["Play Macro"]:SetValue(false)
+                        task.wait(0.0025)
+                        OPTIONS["Play Macro"]:SetValue(true)
                     end
                 end
             end

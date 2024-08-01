@@ -33,7 +33,7 @@ local Configs, Games, Time, Players =
         B = WINDOW:AddTab({ Title = "Settings", Icon = "settings"})
     }
     local SECTIONS = {
-        A = {TABS.A:AddSection("Macro")}
+        A = {TABS.A:AddSection("Configs"), TABS.A:AddSection("Macro")}
     }
 
     Paragraph["MacroInformation"] =
@@ -156,7 +156,7 @@ local Configs, Games, Time, Players =
         end
     })
 
-    SECTIONS.A[1]:AddToggle("Record Macro", {
+    SECTIONS.A[2]:AddToggle("Record Macro", {
         Title = "Record Macro",
         Description = nil,
         Default = false,
@@ -165,7 +165,7 @@ local Configs, Games, Time, Players =
         end
     })
 
-    SECTIONS.A[1]:AddToggle("Play Macro", {
+    SECTIONS.A[2]:AddToggle("Play Macro", {
         Title = "Play Macro",
         Description = nil,
         Default = false,
@@ -241,6 +241,9 @@ local Configs, Games, Time, Players =
         SAVE:Load("Configs")
         Configs.Loading = false
         Paragraph["MacroInformation"]:SetDesc("Selected File: "..(OPTIONS["Selected File"].Value or "None").."\nCurrent Time: 0.000\nMacro Status: None\nMacro Step: 0")
+        if OPTIONS["Selected File"].Value == nil and table.find(FILES:ListFiles("CrazyDay/"..Games.."/Macro", "CrazyDay"..Games.."Macro"), "Start") then
+            OPTIONS["Selected File"]:SetValue("Start")
+        end
     end
 
     do
@@ -292,12 +295,8 @@ local Configs, Games, Time, Players =
         end
     end
 
-    local function MoneyCost()
-        return Players.LocalPlayer.Cash.Value
-    end
-
     local function UpgradeCost(X)
-        local Upgrade
+        local Upgrade = false
         if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Upgrade") and game:GetService("Players").LocalPlayer.PlayerGui.Upgrade.BG.Bottom.Upgrade.Value.Text ~= "" then
             local Values = game:GetService("Players").LocalPlayer.PlayerGui.Upgrade.BG.Bottom.Upgrade.Value.Text:split("$")[2]
             if tonumber(X) >= tonumber(FUNCTIONS:StringToNum(Values)) then
@@ -430,8 +429,8 @@ local Configs, Games, Time, Players =
                     local method = getnamecallmethod();
                     task.spawn(
                         function()
+                            local LastMoney = Players.LocalPlayer.Cash.Value
                             if not GUI.Unloaded and OPTIONS["Record Macro"].Value and ((self.Name == "PlaceTower" and method == "FireServer") or (self.Name == "Upgrade" and method == "InvokeServer") or (self.Name == "Sell" and method == "InvokeServer") or (self.Name == "ChangeTargeting" and method == "InvokeServer")) then
-                                local LastMoney = MoneyCost()
                                 if self.Name == "PlaceTower" and UnitPlaceRequest(arg[1],LastMoney) then
                                     if ItsLimitedUnit(arg[1]) then return end
                                     local Unit, UCFrame = arg[1], arg[2]

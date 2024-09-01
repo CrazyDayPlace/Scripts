@@ -1,3 +1,5 @@
+repeat task.wait() until game:IsLoaded()
+if game.PlaceId ~= 18583778121 and game.PlaceId ~= 12886143095 then return end
 local MyGui = loadstring(game:HttpGet("https://raw.githubusercontent.com/CrazyDayPlace/Collections/main/Gui/main(no%20search).lua"))()
 local Options = MyGui.Options
 local Windows = MyGui:CreateWindow({
